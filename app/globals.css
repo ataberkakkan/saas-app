@@ -155,7 +155,7 @@ body {
     @apply px-2 bg-black rounded-lg flex items-center h-full aspect-square cursor-pointer;
   }
   .input {
-    @apply !border-black !bg-white focus-visible:!ring-0 focus-visible:!border-black !w-full;
+    @apply !border-black !bg-white focus-visible:!ring-0 focus-visible:!border-black !w-full !h-12 !px-4;
   }
   .rounded-border {
     @apply rounded-4xl border border-black;
@@ -167,7 +167,7 @@ body {
     @apply bg-cta-gold rounded-[10px] px-[14px] py-1.5 text-black;
   }
   .btn-primary {
-    @apply bg-[#FE5933] text-white rounded-xl cursor-pointer px-4 py-2 flex items-center gap-2;
+    @apply !bg-[#FE5933] !text-white !rounded-xl !cursor-pointer !px-4 !py-2 !flex !items-center !gap-2;
   }
   .navbar {
     @apply flex items-center justify-between mx-auto w-full px-14 py-4 bg-white max-sm:px-4;
