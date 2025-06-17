@@ -35,7 +35,7 @@ export default function Home() {
         />
       </section>
 
-      <section className="home-section mt-8">
+      <section className="home-section mt-8 mb-6">
         <CompanionsList
           title="Recently completed sessions"
           companions={recentSessions}
