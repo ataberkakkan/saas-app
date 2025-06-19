@@ -196,3 +196,16 @@ export const isBookmarked = async (companionId: string) => {
 
   return !!data; // true if bookmarked, false otherwise
 };
+
+export const getBookmarkedCompanions = async (userId: string) => {
+  const supabase = createSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("bookmarks")
+    .select("companions:companion_id (*)")
+    .eq("user_id", userId);
+
+  if (error) throw new Error(error.message);
+
+  return data.map(({ companions }) => companions);
+};

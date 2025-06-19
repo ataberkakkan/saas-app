@@ -6,6 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import {
+  getBookmarkedCompanions,
   getUserCompanions,
   getUserSessions,
 } from "@/lib/actions/companion.actions";
@@ -20,6 +21,7 @@ const MyJourney = async () => {
 
   const companions = await getUserCompanions(user.id);
   const sessionHistory = await getUserSessions(user.id);
+  const bookmarkedCompanions = await getBookmarkedCompanions(user.id);
 
   return (
     <main>
@@ -65,15 +67,21 @@ const MyJourney = async () => {
         </div>
       </section>
 
-      {/* <section className="home-section mt-8 mb-6">
-        <CompanionsList
-          title="Recently completed sessions"
-          companions={sessionHistory}
-          classNames="w-full"
-        />
-      </section> */}
-
       <Accordion type="multiple">
+        <AccordionItem value="bookmarked">
+          <AccordionTrigger className="text-2xl font-bold">
+            Bookmarked Companions {`(${bookmarkedCompanions.length})`}
+          </AccordionTrigger>
+
+          <AccordionContent>
+            <CompanionsList
+              title="Recently completed sessions"
+              companions={bookmarkedCompanions}
+              classNames="w-full"
+            />
+          </AccordionContent>
+        </AccordionItem>
+
         <AccordionItem value="recent">
           <AccordionTrigger className="text-2xl font-bold">
             Recently Completed Sessions
