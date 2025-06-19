@@ -2,6 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { createSupabaseClient } from "@/lib/supabase";
+import { revalidatePath } from "next/cache";
 
 export const createCompanion = async (formData: CreateCompanion) => {
   const { userId: author } = await auth();
@@ -144,4 +145,54 @@ export const newCompanionPermission = async () => {
   } else {
     return true;
   }
+};
+
+export const bookmarkCompanion = async (companionId: string, path: string) => {
+  const { userId } = await auth();
+  const supabase = createSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("bookmarks")
+    .insert({ companion_id: companionId, user_id: userId })
+    .select();
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath(path);
+
+  return data[0];
+};
+
+export const removeBookmark = async (companionId: string, path: string) => {
+  const { userId } = await auth();
+  const supabase = createSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("bookmarks")
+    .delete()
+    .eq("companion_id", companionId)
+    .eq("user_id", userId)
+    .select();
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath(path);
+
+  return data[0];
+};
+
+export const isBookmarked = async (companionId: string) => {
+  const { userId } = await auth();
+  const supabase = createSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("bookmarks")
+    .select("id")
+    .eq("companion_id", companionId)
+    .eq("user_id", userId)
+    .single();
+
+  if (error && error.code !== "PGRST116") throw new Error(error.message); // handle not found safely
+
+  return !!data; // true if bookmarked, false otherwise
 };

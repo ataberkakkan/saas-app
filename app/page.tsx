@@ -4,11 +4,19 @@ import CTA from "@/components/CTA";
 import {
   getAllCompanions,
   getRecentSessions,
+  isBookmarked,
 } from "@/lib/actions/companion.actions";
 import { getSubjectColor } from "@/lib/utils";
 
 export default async function Home() {
   const companions = await getAllCompanions({ limit: 3 });
+
+  const companionsWithBookmarkStatus = await Promise.all(
+    companions.map(async (companion) => {
+      const bookmarked = await isBookmarked(companion.id);
+      return { ...companion, bookmarked };
+    })
+  );
 
   const recentSessions = await getRecentSessions(10);
 
@@ -17,7 +25,7 @@ export default async function Home() {
       <h1 className="text-2xl">Popular Companions</h1>
 
       <section className="home-section">
-        {companions.map((companion) => (
+        {companionsWithBookmarkStatus.map((companion) => (
           <CompanionCard
             key={companion.id}
             {...companion}
